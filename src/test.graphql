@@ -1,0 +1,50 @@
+
+type Project {
+   id: Int!
+   name: String
+    preview:String
+    description: String
+   owner : User
+   members : [User]
+   branches : [Branch]
+}
+
+type User {
+    id: Int!
+    name: String
+    minecraftUUID : String
+    projects: [Project]
+}
+
+type Branch {
+   id: Int!
+   name: String!
+   schematic: String
+   commits: [Commit]
+}
+
+type Commit {
+    id: Int!
+    schematic: String
+    user: User
+    timestamp: Int
+    branch: [Branch]
+    message: String
+}
+
+type Query {
+    getUser(id:Int): User
+    getUsers: [User],
+    getProjects: [Project],
+    getProject(id:Int): Project
+}
+
+
+
+type Mutation {
+    createUser(name:String): User,
+    createProject(name:String,description:String,owner:Int) : Project,
+
+    commitToProject(commitMessage:String,projectID:Int,branchID:Int, schematic:String) : Commit
+
+}
