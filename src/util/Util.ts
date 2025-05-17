@@ -4,3 +4,7 @@ export async function measureExecutionTime(fn) {
   const end = performance.now();    // Record end time
   console.log(`Execution time: ${end - start} milliseconds`);
 }
+
+export async function emptySchem(){
+
+}

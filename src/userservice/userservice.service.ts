@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { db } from '../main.js';
 import { userTable } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -15,10 +16,24 @@ export class UserService {
     return temp
   }
 
-  async createUser(name:string){
+  async getUserByUsername(username: string) {
+    let [user] = await db.select().from(userTable).where(eq(userTable.name, username));
+    return user;
+  }
+
+  async getUserByEmail(email: string) {
+    let [user] = await db.select().from(userTable).where(eq(userTable.email, email));
+    return user;
+  }
+
+  async createUser(username: string, password: string){
+    const hashedPassword = await bcrypt.hash(password, 10);
     let [newUser] = await db.insert(userTable).values(
-      { name: name },
-    ).returning().values()
+      { 
+        name: username,
+        password: hashedPassword
+      },
+    ).returning();
     return newUser
   }
 

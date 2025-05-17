@@ -9,6 +9,7 @@ import * as fs from 'node:fs';
 import { Schem } from './schematics/Schematic.js';
 import { createDiff } from './schematics/Schemdiff.js';
 import { JSDOM } from 'jsdom';
+import { startServer } from './mcserver/mcserver.js';
 
 export const db = drizzle(process.env.DB_FILE_NAME!);
 
@@ -19,13 +20,17 @@ const dom = new JSDOM('', {
 });
 
 const { window } = dom;
+//@ts-ignore
 global.window = window;
 global.document = window.document;
 global.Image = window.Image;
 global.fetch = fetch;
 
+
+startServer()
+
 async function testSchem(){
-  let temp = fs.readFileSync("wg.schem")
+  let temp = fs.readFileSync("clipboard(19).schem")
   let schem : Schem =  await readSchematic(temp)
 
 

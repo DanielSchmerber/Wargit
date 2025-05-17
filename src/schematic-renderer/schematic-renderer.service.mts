@@ -169,6 +169,7 @@ export class SchematicRendererService {
 // Create a WebGL context using headless-gl
     var glContext = gl(width, height);
 
+    // @ts-ignore
     glContext.canvas ={
       clientWidth:width,
       clientHeight:height

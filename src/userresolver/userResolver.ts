@@ -2,10 +2,12 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/g
 import { db } from '../main.js';
 import { projectTable, userTable } from '../db/schema.js';
 import { UserService } from '../userservice/userservice.service.js';
-import { Res } from '@nestjs/common';
+import { Res, UseGuards } from '@nestjs/common';
 
 import { User } from '../graphql.js';
 import { ProjectService } from '../projectservice/project.service.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { CurrentUser } from '../auth/current-user.decorator.js';
 
 @Resolver("User")
 export class UserResolver {
@@ -16,10 +18,6 @@ export class UserResolver {
   }
 
 
-  @Query() // Return type is an array of User
-  async getUsers() {
-    return this.userService.getUsers();
-  }
 
   @Query() // Return type is a single User
   async getUser(@Args("id", { type: () => Number }) id: number) {
@@ -27,15 +25,22 @@ export class UserResolver {
   }
 
   @ResolveField("projects") // Return type is an array of projects
-  async getProjects(@Parent() parent: User) {
-    console.log("Resolving projects");
+  @UseGuards(JwtAuthGuard)
+  async getProjects( @CurrentUser() user: any,@Parent() parent: User) {
+    console.log("Resolving projects" + JSON.stringify(user)) ;
+
+    if(parent.id != user.id){
+      throw Error("you cant snoop here")
+    }
+
     return this.projectService.getProjectsOfUser(parent.id);
   }
-
+/**
   @Mutation() // Explicitly set return type
   async createUser(@Args("name", { type: () => String }) name: string) {
-    return this.userService.createUser(name);
+    return this.userService.createUser(name,"test");
   }
+**/
 
 
 }

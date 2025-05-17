@@ -4,8 +4,8 @@ export type Schemdiff = {
   x:number,
   y:number,
   z:number,
-  oldBlock:string,
-  newBlock:string,
+  from:string,
+  to:string,
 }
 
 export function createDiff(schem:Schem,schem2:Schem):Schemdiff[]{
@@ -18,12 +18,12 @@ export function createDiff(schem:Schem,schem2:Schem):Schemdiff[]{
     for(let y = 0; y < schem.getHeight(); ++y){
       for(let z = 0; z < schem.getLength(); ++z){
 
-        let oldBlock = schem.getBlockAt(x,y,z);
-        let newBlock = schem2.getBlockAt(x,y,z);
+        let from = schem.getBlockAt(x,y,z);
+        let to = schem2.getBlockAt(x,y,z);
 
-        if(oldBlock != newBlock){
+        if(from != to){
           diffs.push({
-            x,y,z,oldBlock,newBlock
+            x,y,z,from,to
           })
         }
 

@@ -1,4 +1,3 @@
-
 type Project {
    id: Int!
    name: String
@@ -28,23 +27,48 @@ type Commit {
     schematic: String
     user: User
     timestamp: Int
-    branch: [Branch]
+    branch: Branch
     message: String
+}
+
+type CommitResult {
+    successful: Boolean,
+    dubious: Boolean,
+    error_message: Boolean,
+    dubious_message: Boolean,
+    commit: Commit
+}
+
+type AuthPayload {
+    access_token: String!
+    user: User!
+}
+
+type Diff {
+    x: Int!
+    y: Int!
+    z: Int!
+    from: String!
+    to: String!
 }
 
 type Query {
     getUser(id:Int): User
-    getUsers: [User],
     getProjects: [Project],
     getProject(id:Int): Project
 }
 
-
-
 type Mutation {
-    createUser(name:String): User,
-    createProject(name:String,description:String,owner:Int) : Project,
+    createProject(
+        name:String,
+        description:String,
+        width: Int
+        height: Int
+        length: Int
+    ) : Project,
 
-    commitToProject(commitMessage:String,projectID:Int,branchID:Int, schematic:String) : Commit
-
+    createDiff(projectID:Int,branchID:Int, schematic:String) : [Diff],
+    commitToProject(commitMessage:String,projectID:Int,branchID:Int, schematic:String) : Commit,
+    login(username: String!, password: String!): AuthPayload!
+    register(username: String!, password: String!): AuthPayload!
 }

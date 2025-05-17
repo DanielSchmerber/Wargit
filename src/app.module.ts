@@ -11,8 +11,17 @@ import { CommitresolverResolver } from './commitresolver/commitresolver.resolver
 import { ProjectService } from './projectservice/project.service.js';
 import { UserService } from './userservice/userservice.service.js';
 import { SchematicRendererService } from './schematic-renderer/schematic-renderer.service.mjs';
+import { FaweService } from './fawe/fawe.service.js';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { AuthModule } from './auth/auth.module.js';
+import { AuthResolver } from './auth/auth.resolver.js';
+
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'public'),
+      serveRoot: '/static'
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       typePaths: ["./**/*.graphql"],
@@ -21,8 +30,20 @@ import { SchematicRendererService } from './schematic-renderer/schematic-rendere
       },
       playground: true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ProjectresolverResolver, UserResolver, BranchresolverResolver, CommitresolverResolver, ProjectService, UserService, SchematicRendererService],
+  providers: [
+    AppService, 
+    ProjectresolverResolver, 
+    UserResolver, 
+    BranchresolverResolver, 
+    CommitresolverResolver, 
+    ProjectService, 
+    UserService, 
+    SchematicRendererService, 
+    FaweService,
+    AuthResolver
+  ],
 })
 export class AppModule {}

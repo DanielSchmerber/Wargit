@@ -28,9 +28,10 @@ export class SchematicV3{
   private pallet : Map<number, string>;
   constructor(private nbt:any) {
     this.pallet = new Map();
+
+    console.log(nbt)
+
     let tempPallet = nbt.value.Schematic.value.Blocks.value.Palette.value;
-
-
 
     for(const temp in tempPallet){
       this.pallet.set(tempPallet[temp].value,temp)
@@ -41,7 +42,7 @@ export class SchematicV3{
 
   getBlockAt(x:number,y:number,z:number){
     let index = x + (z+y*this.getLength())*this.getWidth()
-    return this.pallet.get(this.nbt.value.Schematic.value.Blocks.value.Data.value[index])
+    return this.pallet.get(this.nbt.value.Schematic.value.Blocks.value.Data.value[index])??null
   }
 
   getHeight(){

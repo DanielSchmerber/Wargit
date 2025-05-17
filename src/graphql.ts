@@ -37,21 +37,43 @@ export interface Commit {
     schematic?: Nullable<string>;
     user?: Nullable<User>;
     timestamp?: Nullable<number>;
-    branch?: Nullable<Nullable<Branch>[]>;
+    branch?: Nullable<Branch>;
     message?: Nullable<string>;
+}
+
+export interface CommitResult {
+    successful?: Nullable<boolean>;
+    dubious?: Nullable<boolean>;
+    error_message?: Nullable<boolean>;
+    dubious_message?: Nullable<boolean>;
+    commit?: Nullable<Commit>;
+}
+
+export interface AuthPayload {
+    access_token: string;
+    user: User;
+}
+
+export interface Diff {
+    x: number;
+    y: number;
+    z: number;
+    from: string;
+    to: string;
 }
 
 export interface IQuery {
     getUser(id?: Nullable<number>): Nullable<User> | Promise<Nullable<User>>;
-    getUsers(): Nullable<Nullable<User>[]> | Promise<Nullable<Nullable<User>[]>>;
     getProjects(): Nullable<Nullable<Project>[]> | Promise<Nullable<Nullable<Project>[]>>;
     getProject(id?: Nullable<number>): Nullable<Project> | Promise<Nullable<Project>>;
 }
 
 export interface IMutation {
-    createUser(name?: Nullable<string>): Nullable<User> | Promise<Nullable<User>>;
-    createProject(name?: Nullable<string>, description?: Nullable<string>, owner?: Nullable<number>): Nullable<Project> | Promise<Nullable<Project>>;
+    createProject(name?: Nullable<string>, description?: Nullable<string>, width?: Nullable<number>, height?: Nullable<number>, length?: Nullable<number>): Nullable<Project> | Promise<Nullable<Project>>;
+    createDiff(projectID?: Nullable<number>, branchID?: Nullable<number>, schematic?: Nullable<string>): Nullable<Nullable<Diff>[]> | Promise<Nullable<Nullable<Diff>[]>>;
     commitToProject(commitMessage?: Nullable<string>, projectID?: Nullable<number>, branchID?: Nullable<number>, schematic?: Nullable<string>): Nullable<Commit> | Promise<Nullable<Commit>>;
+    login(username: string, password: string): AuthPayload | Promise<AuthPayload>;
+    register(username: string, password: string): AuthPayload | Promise<AuthPayload>;
 }
 
 type Nullable<T> = T | null;

@@ -5,6 +5,8 @@ import { UserService } from '../userservice/userservice.service.js';
 import { commitTable, userTable } from '../db/schema.js';
 import { db } from '../main.js';
 import { eq } from 'drizzle-orm';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 
 @Resolver("Commit")
 export class CommitresolverResolver {
@@ -12,10 +14,13 @@ export class CommitresolverResolver {
 
   }
   @ResolveField("user")
+  @UseGuards(JwtAuthGuard)
   async getCommits(@Parent() parent: Commit) {
     let [user] =  await db.select({id : commitTable.userId}).from(commitTable).where(eq(commitTable.id,parent.id))
     return this.userService.getUser(user.id)
   }
+
+
 
 
 }

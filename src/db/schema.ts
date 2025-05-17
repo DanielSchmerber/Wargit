@@ -5,7 +5,9 @@ export const userTable = sqliteTable("User", {
     {autoIncrement : true}
   ).notNull(),
   minecraftUUID: text("minecraftUUID"),
-  name: text("name"),
+  name: text("name").unique(),
+  email: text("email").unique(),
+  password: text("password"),
 });
 
 export const projectTable = sqliteTable("Project", {
@@ -16,6 +18,9 @@ export const projectTable = sqliteTable("Project", {
   description: text("description"),
   preview: text("preview"),
   ownerId: integer("ownerID").references(() => userTable.id), // Foreign key to User
+  width: integer("width"),
+  height: integer("height"),
+  length: integer("length")
 });
 
 export const projectMemberTable = sqliteTable("ProjectMembers", {
